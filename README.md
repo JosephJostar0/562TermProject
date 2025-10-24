@@ -4,10 +4,9 @@
 **Instructor:** Wes J. Lloyd
 
 **Team:**
-* Waiting for the 4th member
 * Bohan Xiong (bohanx2@uw.edu)
-* Xu Zhu (test@uw.edu)
-* Xiaoling Wei (test@uw.edu)
+* Xu Zhu (xuz44@uw.edu)
+* Xiaoling Wei (xlwei28@uw.edu)
 
 ---
 

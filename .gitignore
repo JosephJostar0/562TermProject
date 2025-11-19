@@ -1,5 +1,5 @@
 *.pdf
-!proposal.pdf
+# !proposal.pdf
 
 # LaTeX intermediate files
 *.aux

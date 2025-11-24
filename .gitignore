@@ -1,4 +1,10 @@
 *.pdf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.webep
 # !proposal.pdf
 
 # LaTeX intermediate files

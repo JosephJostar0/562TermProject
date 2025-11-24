@@ -10,3 +10,5 @@
 1. Nov 25
 2. Dec 2
 3. Dec 4
+
+slides url: https://docs.google.com/presentation/d/1hgdl0lRfp_vsCdz6UVs709Nv1Ywedwq5Ik5877NVSh8/edit?usp=sharing

@@ -1,3 +1,8 @@
+deploy_all.sh
+reportDrafts/
+Presentation/
+*.zip
+
 *.pdf
 *.png
 *.jpg

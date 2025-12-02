@@ -1,3 +1,6 @@
-test.jpg
+# test.jpg
 image_results/
 gpt_test.py
+benchmark.py
+csv_results/
+temp.*

@@ -5,19 +5,19 @@ import json
 import base64
 import time
 import argparse
-import os
+from pathlib import Path
 
 # === Configuration Section ===
 # Your S3 Bucket Name
 # IMPORTANT: Please fill in your actual bucket name below
-BUCKET_NAME = ""  # <--- YOUR ACTUAL BUCKET NAME
+BUCKET_NAME = ""  # TODO: Fill in your actual bucket name here
 REGION = "us-east-2"
 
 # Basic function name mapping
 # E.g., if your function format is: deepseek_func{N}-{ARCH}
 FUNC_PREFIX = "deepseek_func"
 
-RESULT_DIR = "image_results"
+RESULT_DIR = Path("image_results")
 
 # Initialize Boto3
 lambda_client = boto3.client('lambda', region_name=REGION)
@@ -28,10 +28,12 @@ timestamp = int(time.time())
 
 def encode_image(image_path):
     """Read local image and convert to Base64."""
-    if not os.path.exists(image_path):
+    path = Path(image_path)
+    if not path.exists():
         raise FileNotFoundError(f"Image not found: {image_path}")
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+
+    # Use pathlib to read bytes directly
+    return base64.b64encode(path.read_bytes()).decode('utf-8')
 
 
 def save_image(base64_str, step_name, arch):
@@ -40,16 +42,18 @@ def save_image(base64_str, step_name, arch):
         # Clean up step name for use as filename (e.g., "Step 1 (Greyscale)" -> "step1_greyscale")
         clean_name = step_name.lower().replace(
             " ", "_").replace("(", "").replace(")", "")
-        filename = os.path.join(RESULT_DIR, f"out_{clean_name}_{arch}.jpg")
 
-        os.makedirs(os.path.join(RESULT_DIR, str(timestamp)), exist_ok=True)
-        # Save image to RESULT_DIR/timestamp/filename
-        filename = os.path.join(RESULT_DIR, str(
-            timestamp), f"out_{clean_name}_{arch}.jpg")
+        # Create directory: image_results/<timestamp>/
+        # parents=True creates intermediate directories if needed (mkdir -p)
+        target_dir = RESULT_DIR / str(timestamp)
+        target_dir.mkdir(parents=True, exist_ok=True)
 
-        with open(filename, "wb") as f:
-            f.write(base64.b64decode(base64_str))
-        print(f"     💾 Saved output to: {filename}")
+        # Define output filename
+        file_path = target_dir / f"out_{clean_name}_{arch}.jpg"
+
+        # Write bytes directly using pathlib
+        file_path.write_bytes(base64.b64decode(base64_str))
+        print(f"     💾 Saved output to: {file_path}")
     except Exception as e:
         print(f"     ⚠️ Failed to save image: {e}")
 

@@ -4,3 +4,5 @@ gpt_test.py
 benchmark.py
 csv_results/
 temp.*
+processed_data/
+plots/

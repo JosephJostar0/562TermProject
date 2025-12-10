@@ -2,6 +2,8 @@ deploy_all.sh
 reportDrafts/
 Presentation/
 *.zip
+temp.*
+temp/
 
 *.pdf
 # *.png

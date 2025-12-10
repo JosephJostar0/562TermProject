@@ -4,6 +4,7 @@ Presentation/
 *.zip
 temp.*
 temp/
+.idea/
 
 *.pdf
 # *.png

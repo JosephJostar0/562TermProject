@@ -2,7 +2,8 @@
 image_results/
 gpt_test.py
 benchmark.py
-csv_results/
+# csv_results/
 temp.*
 processed_data/
 plots/
+*.rar

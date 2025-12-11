@@ -236,7 +236,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--arch", choices=['x86', 'arm'], default='x86', help="Architecture")
     parser.add_argument(
-        "--mode", choices=['pipeline', 'standalone'], default='pipeline', help="Execution mode")
+        "--mode", choices=['pipeline', 'standalone'], default='standalone', help="Execution mode")
 
     # Statistics arguments
     parser.add_argument("--runs", type=int, default=10,

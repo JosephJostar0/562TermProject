@@ -5,6 +5,8 @@ Presentation/
 temp.*
 temp/
 .idea/
+*.cut
+termProject/report/img
 
 *.pdf
 # *.png

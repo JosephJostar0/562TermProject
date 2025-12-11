@@ -117,7 +117,7 @@ def process_raw_data(source_dir: Path, target_dir: Path) -> None:
 
 def load_all_data(source_dir: Path) -> pd.DataFrame:
     """
-    Loads all processed CSV files into a DataFrame.
+    Loads all processed CSV files into a DataFrame and SYNTHESIZES Pipeline_Total.
     """
     all_files = list(source_dir.glob("*.csv"))
     if not all_files:
@@ -135,10 +135,41 @@ def load_all_data(source_dir: Path) -> pd.DataFrame:
 
     combined_df = pd.concat(df_list, ignore_index=True)
 
-    for col in ['Logic_Time_ms', 'Round_Trip_ms']:
+    # Convert numeric columns
+    cols_to_numeric = ['Logic_Time_ms', 'Round_Trip_ms']
+    for col in cols_to_numeric:
         if col in combined_df.columns:
             combined_df[col] = pd.to_numeric(
                 combined_df[col], errors='coerce').fillna(0.0)
+
+    # --- FIX: Synthesize 'Pipeline_Total' from steps ---
+    # Group by key identifiers to calculate sum for each run
+    # Assuming 'Run_ID' is unique within a specific file context,
+    # but since we merged files, we need to group by metadata too to be safe.
+    group_cols = ['LLM_Source', 'Architecture', 'Workload_Type', 'Run_ID']
+
+    # Check if necessary columns exist
+    if all(col in combined_df.columns for col in group_cols):
+        # Filter for BENCHMARK steps only to avoid double counting if Total exists
+        benchmark_steps = combined_df[
+            (combined_df['Type'] == 'BENCHMARK') &
+            (combined_df['Step'] != 'Pipeline_Total')
+        ]
+
+        # Calculate Sums
+        total_times = benchmark_steps.groupby(
+            group_cols)[cols_to_numeric].sum().reset_index()
+
+        # Assign static columns for the summary rows
+        total_times['Step'] = 'Pipeline_Total'
+        total_times['Type'] = 'BENCHMARK'  # Or 'SUMMARY'
+        total_times['Function_Name'] = 'Aggregated'
+        # Assume success if steps exist, or refine logic
+        total_times['Success'] = True
+
+        # Concatenate original data with new totals
+        combined_df = pd.concat([combined_df, total_times], ignore_index=True)
+        print(f"[*] Synthesized {len(total_times)} 'Pipeline_Total' rows.")
 
     return combined_df
 
